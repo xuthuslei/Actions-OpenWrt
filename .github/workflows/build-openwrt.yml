@@ -16,15 +16,15 @@ on:
       - master
     paths:
       - '.config'
-#  schedule:
-#    - cron: 0 8 * * 5
+  schedule:
+    - cron: 0 8 * * 5
 #  watch:
 #    types: started
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: .config
+  CONFIG_FILE: k2p.config
   DIY_SH: diy.sh
   SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
@@ -56,7 +56,10 @@ jobs:
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: |
+       cd openwrt
+       echo "src-git lienol https://github.com/Lienol/openwrt-package" >> feeds.conf.default
+       ./scripts/feeds update -a
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
